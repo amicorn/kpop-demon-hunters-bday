@@ -29,17 +29,25 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Entrance: sprites animate via CSS (animation on .sprite-opponent and .sprite-player)
   // Show initial text and the Meet button
   function showIntro() {
-    promptText.textContent = 'A wild DERPY TIGER appeared!';
-    buttons.innerHTML = `<button class="action-btn" id="meetBtn">Meet DERPY TIGER</button>`;
+  promptText.textContent = 'A wild DERPY TIGER appeared!';
+  buttons.innerHTML = `<button class="action-btn" id="meetBtn">Meet DERPY TIGER</button>`;
 
-    // reveal opponent stats shortly (so it feels like it pops in near the opponent)
-    setTimeout(() => {
-      opponentStats.style.transition = 'opacity .28s ease, transform .36s cubic-bezier(.22,1,.36,1)';
-      opponentStats.style.opacity = '1';
-      opponentStats.style.transform = 'translateY(0) scale(1)';
-      opponentStats.setAttribute('aria-hidden','false');
-    }, 700); // slightly after the sprites begin sliding in
-  }
+  // reveal both stats shortly (so they pop in together with the sprites)
+  setTimeout(() => {
+    const trans = 'opacity .28s ease, transform .36s cubic-bezier(.22,1,.36,1)';
+    opponentStats.style.transition = trans;
+    playerStats.style.transition = trans;
+
+    opponentStats.style.opacity = '1';
+    opponentStats.style.transform = 'translateY(0) scale(1)';
+    opponentStats.setAttribute('aria-hidden','false');
+
+    playerStats.style.opacity = '1';
+    playerStats.style.transform = 'translateY(0) scale(1)';
+    playerStats.setAttribute('aria-hidden','false');
+  }, 700); // tweak this delay if you want them to appear earlier/later
+}
+
 
   // Show option buttons and reveal player stats
   function showOptions() {
@@ -47,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     buttons.innerHTML = `
       <button class="action-btn" id="rapBtn">RAP BATTLE</button>
       <button class="action-btn" id="hugBtn">HUG</button>
-      <button class="action-btn" id="singBtn">SING</button>
+      <button class="action-btn" id="singBtn">SLAY</button>
       <button class="action-btn" id="danceBtn">DANCE</button>
     `;
 
