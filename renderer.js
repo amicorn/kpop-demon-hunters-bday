@@ -9,7 +9,12 @@ window.createStatsHTML = function(name, level, hpPercent = 100){
       <span class="stats-name">${name}</span>
       <span class="stats-level">Lv ${level}</span>
     </div>
-    <div class="hp"><div class="hp-fill" style="width:${hpPercent}%"></div></div>
+    <div class="hp">
+      <span class="hp-label">HP</span>
+      <div class="hp-bar">
+        <div class="hp-fill" style="width:${hpPercent}%"></div>
+      </div>
+    </div>
   `;
 };
 

@@ -67,8 +67,8 @@ body {
 .sprite-opponent {
     width: min(48vw, 360px);
     height: auto;
-    left: -40%;
-    top: 25%;
+    left: -200%;
+    top: var(--panel-h);
     animation: opponent-enter 2000ms cubic-bezier(.22, 1, .36, 1) forwards;
     animation-delay: 300ms;
 }
@@ -81,6 +81,21 @@ body {
     bottom: var(--panel-h);
     animation: player-enter 2000ms cubic-bezier(.22, 1, .36, 1) forwards;
     animation-delay: 300ms;
+}
+
+/* Opponent stats - top right near opponent */
+.stats-opponent {
+  position: absolute;
+  top: 18%;
+  left: 10%;
+  right: auto;  /* remove conflicting right */
+}
+
+/* Player stats - bottom left near player */
+.stats-player {
+  position: absolute;
+  bottom: 30%;
+  left: 60%;
 }
 
 /* Stats bubbles (start hidden via opacity; JS will reveal) */
@@ -96,18 +111,6 @@ body {
     width: min(56vw, 300px);
     z-index: 3;
     opacity: 0;
-    transform: translateY(-8px) scale(.98);
-}
-
-/* when JS sets inline styles, transform will be cleared */
-.stats-opponent {
-    top: 4%;
-    left: 4%;
-}
-
-.stats-player {
-    right: 4%;
-    bottom: calc(var(--panel-h) + 10px);
 }
 
 .stats-row {
@@ -118,12 +121,13 @@ body {
     font-size: clamp(10px, 1.9vw, 12px);
     letter-spacing: .3px;
     color: #ff1493;
-    /* neon pink text */
+    padding-bottom: 16px;    
     text-shadow: 0 0 3px #ff69b4;
 }
 
 .stats-name {
-    font-weight: 600;
+    font-weight: 1000;
+    font-size: 15px;
 }
 
 .stats-level {
@@ -131,21 +135,32 @@ body {
 }
 
 .hp {
-    margin-top: 8px;
-    height: 12px;
-    border: var(--border) solid #ff34da;
-    border-color: #ff1493;
-    /* neon pink border */
-    border-radius: 999px;
-    background: #f1f1f1;
-    overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.hp-label {
+  font-family: "Press Start 2P", monospace;
+  font-size: 10px;
+  color: #ff1493;
+  text-shadow: 0 0 2px #ff69b4;
+}
+
+.hp-bar {
+  flex: 1;
+  height: 12px;
+  background: #eee;
+  border: 1px solid #ff69b4;
+  border-radius: 999px;
+  overflow: hidden;
 }
 
 .hp-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #ffd700, #ffec8b);
-    /* gold gradient */
-    /* background: linear-gradient(90deg, #f4dc04, #e6df7f); */
+  height: 100%;
+  background: linear-gradient(90deg, #ffd700, #ffec8b);
+  border-radius: 999px;
 }
 
 /* Bottom panel styling */
@@ -308,7 +323,7 @@ body {
     font-size: clamp(14px, 2.6vw, 18px);
     background: #fff;
     border-radius: 12px;
-    border: 3px solid #000;
+    border: 3px solid #ff00d4;
     padding: 12px 14px;
     text-align: center;
 }
@@ -317,7 +332,7 @@ body {
     font-family: "Press Start 2P", monospace;
     font-size: clamp(14px, 2.6vw, 18px);
     background: #fff;
-    border: 3px solid #000;
+    border: 3px solid #ff0080;
     border-radius: 12px;
     padding: 12px 18px;
     cursor: pointer;

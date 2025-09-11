@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // initial hidden states (use opacity so CSS transitions still work)
   opponentStats.style.opacity = '0';
   playerStats.style.opacity = '0';
-  cardPopup.setAttribute('aria-hidden','true');
+  cardPopup.setAttribute('aria-hidden','false');
 
   // --- Entrance: sprites animate via CSS (animation on .sprite-opponent and .sprite-player)
   // Show initial text and the Meet button
@@ -59,11 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <button class="action-btn" id="danceBtn">DANCE</button>
     `;
 
-    // reveal player stats
-    playerStats.style.transition = 'opacity .28s ease, transform .36s cubic-bezier(.22,1,.36,1)';
-    playerStats.style.opacity = '1';
-    playerStats.style.transform = 'translateY(0) scale(1)';
-    playerStats.setAttribute('aria-hidden','false');
+    
   }
 
   // Hearts explosion around opponent
