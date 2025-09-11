@@ -83,13 +83,36 @@ body {
     animation-delay: 300ms;
 }
 
-/* Opponent stats - top right near opponent */
 .stats-opponent {
   position: absolute;
   top: 18%;
   left: 10%;
-  right: auto;  /* remove conflicting right */
+  background: linear-gradient(145deg, #ffe6f0, #ffd1f7);
+  border-radius: 10px;
+  padding: 10px 12px;
+  z-index: 3;
+  opacity: 1;
+  transform: translateY(0);
 }
+
+/* Tail pointing left (toward opponent sprite) */
+.stats-opponent::after {
+  content: '';
+  position: absolute;
+  bottom: 12px;
+  left: 100%;
+  width: 0;
+  height: 0;
+  
+  /* tail shape */
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 18px solid #ffd1f7; /* matches bubble background */
+
+  /* mimic border by adding an extra shadow */
+  box-shadow: 10 20px 20px rgb(255, 1, 128);
+}
+
 
 /* Player stats - bottom left near player */
 .stats-player {
@@ -97,6 +120,20 @@ body {
   bottom: 30%;
   left: 60%;
 }
+
+/* Tail pointing right (toward player sprite) */
+.stats-player::after {
+  content: '';
+  position: absolute;
+  bottom: 12px;       /* vertical alignment */
+  right: 100%;        /* outside the bubble */
+  width: 0;
+  height: 0;
+  border-top: 12px solid transparent;    /* taller triangle */
+  border-bottom: 12px solid transparent; 
+  border-right: 18px solid #ffe6f0;     /* longer triangle pointing left */
+}
+
 
 /* Stats bubbles (start hidden via opacity; JS will reveal) */
 .stats {
@@ -132,6 +169,7 @@ body {
 
 .stats-level {
     opacity: .9;
+    font-size: 15px;
 }
 
 .hp {
