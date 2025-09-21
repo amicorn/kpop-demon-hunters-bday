@@ -41,7 +41,7 @@ body {
     position: absolute;
     inset: 0;
     z-index: 0;
-    background: url("../assets/Kpop_bg_Resized.png") center center / cover no-repeat;
+    background: url("../assets/images/Kpop_bg_Resized.png") center center / cover no-repeat;
 }
 
 /* Sprites */
@@ -86,54 +86,59 @@ body {
 }
 
 .stats-opponent {
-  position: absolute;
-  top: 18%;
-  left: 10%;
-  background: linear-gradient(145deg, #ffe6f0, #ffd1f7);
-  border-radius: 10px;
-  padding: 10px 12px;
-  z-index: 3;
-  opacity: 1;
-  transform: translateY(0);
+    position: absolute;
+    top: 18%;
+    left: 10%;
+    background: linear-gradient(145deg, #ffe6f0, #ffd1f7);
+    border-radius: 10px;
+    padding: 10px 12px;
+    z-index: 3;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* Tail pointing left (toward opponent sprite) */
 .stats-opponent::after {
-  content: '';
-  position: absolute;
-  bottom: 12px;
-  left: 100%;
-  width: 0;
-  height: 0;
-  
-  /* tail shape */
-  border-top: 12px solid transparent;
-  border-bottom: 12px solid transparent;
-  border-left: 18px solid #ffd1f7; /* matches bubble background */
+    content: '';
+    position: absolute;
+    bottom: 12px;
+    left: 100%;
+    width: 0;
+    height: 0;
 
-  /* mimic border by adding an extra shadow */
-  box-shadow: 10 20px 20px rgb(255, 1, 128);
+    /* tail shape */
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 18px solid #ffd1f7;
+    /* matches bubble background */
+
+    /* mimic border by adding an extra shadow */
+    box-shadow: 10 20px 20px rgb(255, 1, 128);
 }
 
 
 /* Player stats - bottom left near player */
 .stats-player {
-  position: absolute;
-  bottom: 30%;
-  left: 60%;
+    position: absolute;
+    bottom: 30%;
+    left: 60%;
 }
 
 /* Tail pointing right (toward player sprite) */
 .stats-player::after {
-  content: '';
-  position: absolute;
-  bottom: 12px;       /* vertical alignment */
-  right: 100%;        /* outside the bubble */
-  width: 0;
-  height: 0;
-  border-top: 12px solid transparent;    /* taller triangle */
-  border-bottom: 12px solid transparent; 
-  border-right: 18px solid #ffe6f0;     /* longer triangle pointing left */
+    content: '';
+    position: absolute;
+    bottom: 12px;
+    /* vertical alignment */
+    right: 100%;
+    /* outside the bubble */
+    width: 0;
+    height: 0;
+    border-top: 12px solid transparent;
+    /* taller triangle */
+    border-bottom: 12px solid transparent;
+    border-right: 18px solid #ffe6f0;
+    /* longer triangle pointing left */
 }
 
 
@@ -160,7 +165,7 @@ body {
     font-size: clamp(10px, 1.9vw, 12px);
     letter-spacing: .3px;
     color: #ff1493;
-    padding-bottom: 2px;    
+    padding-bottom: 2px;
     text-shadow: 0 0 3px #ff69b4;
 }
 
@@ -170,16 +175,28 @@ body {
 }
 
 .stats-left {
-  display: flex;
-  align-items: center;
-  gap: 6px; /* space between text and logo */
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    /* space between text and logo */
 }
 
 .stats .stats-logo {
-  height: 50px;   /* adjust size */
-  width: auto;
-  display: block; /* prevents baseline offset */
-  object-fit: contain;
+    height: 50px;
+    /* adjust size */
+    width: auto;
+    display: block;
+    /* prevents baseline offset */
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    /* smooth enlarge animation */
+    cursor: pointer;
+    /* optional */
+}
+
+.stats-logo:hover {
+    transform: scale(1.5);
+    /* enlarge smoothly on hover */
 }
 
 .stats-level {
@@ -188,32 +205,32 @@ body {
 }
 
 .hp {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
 }
 
 .hp-label {
-  font-family: "Press Start 2P", monospace;
-  font-size: 10px;
-  color: #ff1493;
-  text-shadow: 0 0 2px #ff69b4;
+    font-family: "Press Start 2P", monospace;
+    font-size: 10px;
+    color: #ff1493;
+    text-shadow: 0 0 2px #ff69b4;
 }
 
 .hp-bar {
-  flex: 1;
-  height: 12px;
-  background: #eee;
-  border: 1px solid #ff69b4;
-  border-radius: 999px;
-  overflow: hidden;
+    flex: 1;
+    height: 12px;
+    background: #eee;
+    border: 1px solid #ff69b4;
+    border-radius: 999px;
+    overflow: hidden;
 }
 
 .hp-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #ffd700, #ffec8b);
-  border-radius: 999px;
+    height: 100%;
+    background: linear-gradient(90deg, #ffd700, #ffec8b);
+    border-radius: 999px;
 }
 
 /* Bottom panel styling */
@@ -295,54 +312,55 @@ body {
 .open-card-btn,
 .derpy-close-btn,
 .birthday-close-btn {
-  background: linear-gradient(145deg, #ff9cd6, #ff70c2);
-  border: 2px solid #ff4fa5;
-  color: white;
-  font-family: 'Press Start 2P', sans-serif;
-  font-size: 12px;
-  padding: 12px 20px;
-  border-radius: 30px; /* round pill/bubble shape */
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(255, 80, 150, 0.4);
-  transition: all 0.2s ease;
+    background: linear-gradient(145deg, #ff9cd6, #ff70c2);
+    border: 2px solid #ff4fa5;
+    color: white;
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 12px;
+    padding: 12px 20px;
+    border-radius: 30px;
+    /* round pill/bubble shape */
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(255, 80, 150, 0.4);
+    transition: all 0.2s ease;
 }
 
 .action-btn:hover,
 .open-card-btn:hover,
 .derpy-close-btn:hover,
 .birthday-close-btn:hover {
-  background: linear-gradient(145deg, #ffb5e4, #ff7fcb);
-  transform: scale(1.08);
-  box-shadow: 0 6px 12px rgba(255, 80, 150, 0.6);
+    background: linear-gradient(145deg, #ffb5e4, #ff7fcb);
+    transform: scale(1.08);
+    box-shadow: 0 6px 12px rgba(255, 80, 150, 0.6);
 }
 
 .action-btn:active,
 .open-card-btn:active,
 .derpy-close-btn:active,
 .birthday-close-btn:active {
-  transform: scale(0.95);
-  box-shadow: 0 3px 6px rgba(255, 80, 150, 0.5);
+    transform: scale(0.95);
+    box-shadow: 0 3px 6px rgba(255, 80, 150, 0.5);
 }
 
 /* Additional positioning for birthday-close-btn */
 .birthday-close-btn {
-  position: absolute;
-  left: 40%;
-  top: 100%;
+    position: absolute;
+    left: 40%;
+    top: 100%;
 }
 
 .open-card-btn {
-  position: absolute;
-  left: 20%;
-  top: 110%;
-  width: 30%;
+    position: absolute;
+    left: 20%;
+    top: 110%;
+    width: 30%;
 }
 
 .derpy-close-btn {
-  position: absolute;
-  left: 52%;
-  top: 110%;
-  width: 30%;
+    position: absolute;
+    left: 52%;
+    top: 110%;
+    width: 30%;
 }
 
 
@@ -442,52 +460,53 @@ body {
 }
 
 .birthday-card-popup {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.45);
-  z-index: 50;
-  padding: 15px;
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 50;
+    padding: 15px;
 }
 
 .birthday-card-hidden {
-  display: none !important;
-  visibility: hidden;
-  opacity: 0;
+    display: none !important;
+    visibility: hidden;
+    opacity: 0;
 }
 
 .birthday-card-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transform: translateY(-10%); /* move card + text up without shifting background */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translateY(-10%);
+    /* move card + text up without shifting background */
 }
 
 .birthday-card-img {
-  display: block;
-  width: 100%;
-  max-height: 100vh;
-  object-fit: contain;
-  border-radius: 16px;
-  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.22);
+    display: block;
+    width: 100%;
+    max-height: 100vh;
+    object-fit: contain;
+    border-radius: 16px;
+    box-shadow: 0 12px 38px rgba(0, 0, 0, 0.22);
 }
 
 .birthday-card-text {
-  position: absolute;
-  top: 67%;         
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;        
-  text-align: center;
-  color: #ff00d4;
-  text-shadow: 0 0 4px #ff69b4;
-  font-family: "Press Start 2P", monospace;
-  font-size: clamp(13px, 6vw, 15px);
-  line-height: 1.5;
-  z-index: 2;
-  pointer-events: none;
+    position: absolute;
+    top: 67%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    text-align: center;
+    color: #ff00d4;
+    text-shadow: 0 0 4px #ff69b4;
+    font-family: "Press Start 2P", monospace;
+    font-size: clamp(13px, 6vw, 15px);
+    line-height: 1.5;
+    z-index: 2;
+    pointer-events: none;
 }
 
 
@@ -601,9 +620,11 @@ body {
         transform: translateY(0);
         opacity: 1;
     }
+
     40% {
         opacity: 1;
     }
+
     to {
         transform: translateY(600px);
         opacity: 0;
@@ -611,13 +632,23 @@ body {
 }
 
 @keyframes overlay-fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }
 
 @keyframes fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }
 
 
@@ -641,15 +672,33 @@ body {
 
 /* Wiggle animation - additive on top of current transform */
 @keyframes wiggle {
-  0%   { transform: rotate(0deg); }
-  25%  { transform: rotate(5deg); }
-  50%  { transform: rotate(-5deg); }
-  75%  { transform: rotate(5deg); }
-  100% { transform: rotate(0deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(5deg);
+    }
+
+    50% {
+        transform: rotate(-5deg);
+    }
+
+    75% {
+        transform: rotate(5deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
 }
 
 .sprite-wiggle {
-  animation: wiggle 0.8s ease-in-out;
-  animation-fill-mode: forwards; /* keeps the final rotation at 0deg */
+    animation: wiggle 0.8s ease-in-out;
+    animation-fill-mode: forwards;
+    /* keeps the final rotation at 0deg */
 }
 
+.sprite-hover-wiggle {
+    animation: wiggle 0.8s ease-in-out forwards;
+}

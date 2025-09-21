@@ -1,14 +1,9 @@
 /**
- * script.js - main game flow
- * Flow:
- *  - initial: "A wild DERPY TIGER appeared!" + opponent stats appear + "Meet DERPY TIGER" button
- *  - click Meet -> show player's stats + "What will HUNTRIX do?" with 4 buttons
- *  - click HUG -> hearts explosion on opponent, then show card popup (text above image + OPEN CARD)
- *  - click OPEN CARD -> bottom panel displays final birthday poem
+ * script.js - main game flow with full sound support
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // DOM nodes
+    // --- DOM NODES ---
     const promptText = document.getElementById('promptText');
     const buttons = document.getElementById('buttons');
     const opponent = document.getElementById('opponent');
@@ -19,20 +14,84 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardPopup = document.getElementById('cardPopup');
     const cardPopupContent = document.getElementById('cardPopupContent');
     const cardPopupImage = document.getElementById('cardPopupImage');
-    const openCardPopupBtn = document.getElementById('openCardPopupBtn');
 
-    // initial hidden states (use opacity so CSS transitions still work)
+    // Static buttons
+    const openCardBtn = document.getElementById('openCardPopupBtn');
+    const returnToJinuBtn = document.getElementById('returnToJinuBtn');
+    const closeDerpyCardBtn = document.getElementById('closeDerpyCardBtn');
+    const birthdayCardPopup = document.getElementById('birthdayCardPopup');
+    const closeBirthdayCardBtn = document.getElementById('closeBirthdayCardBtn');
+
+    // --- INITIAL STATES ---
     opponentStats.style.opacity = '0';
     playerStats.style.opacity = '0';
-    cardPopup.setAttribute('aria-hidden', 'false');
+    cardPopup.setAttribute('aria-hidden', 'true');
 
-    // --- Entrance: sprites animate via CSS (animation on .sprite-opponent and .sprite-player)
-    // Show initial text and the Meet button
+    // --- SOUNDS ---
+    const sounds = {
+        bgMusic: new Audio('assets/music/strawberry-mousse-cute-bgm.mp3'),
+        heart: new Audio('assets/sfx/popping-bubbles.mp3'),
+        cardUp: new Audio('assets/sfx/cute-cat.mp3'),
+        cardDown: new Audio('assets/sfx/cat-meow-loud.mp3'),
+        birthdayCard: new Audio('assets/music/sound-effect-twinklesparkle.mp3'),
+        actionClick: new Audio('assets/sfx/sound-effect-twinklesparkle.mp3'),
+        returnToJinu: new Audio('assets/sfx/pokemon-cry-parody.mp3'),
+        playerHover: new Audio('assets/sfx/sound-effect-twinklesparkle.mp3'),
+        opponentHover: new Audio('assets/sfx/cute-cat.mp3'),
+        hoverSounds: {
+            meetBtn: new Audio('assets/sfx/cat-meow-loud.mp3'),
+            hugBtn: new Audio('assets/music/body-temperature.mp3'),
+            rapBtn: new Audio('assets/music/hard-rap-beat.mp3'),
+            singBtn: new Audio('assets/music/shine-babe-k-pop-music.mp3'),
+            danceBtn: new Audio('assets/music/stupid-stars-k-pop-music.mp3'),
+            openCardPopupBtn: new Audio('assets/sfx/weird-pikachu.mp3'),
+            backToOptionsBtn: new Audio('assets/sfx/cute-cat.mp3')
+        }
+    };
+
+    // --- BACKGROUND MUSIC ---
+    sounds.bgMusic.loop = true;
+    sounds.bgMusic.volume = 0.4;
+
+    function stopAllExceptBg() {
+        Object.values(sounds).forEach(s => {
+            if (s instanceof Audio && s !== sounds.bgMusic) {
+                s.pause();
+                s.currentTime = 0;
+            }
+        });
+        Object.values(sounds.hoverSounds).forEach(s => {
+            s.pause();
+            s.currentTime = 0;
+        });
+    }
+
+    function playSound(audio) {
+        if (!audio) return;
+        stopAllExceptBg();
+        audio.currentTime = 0;
+        audio.play().catch(() => { });
+    }
+
+    // Auto-start background music on first interaction
+    function resumeBgMusic() {
+        if (sounds.bgMusic.paused) sounds.bgMusic.play().catch(() => { });
+        document.removeEventListener('click', resumeBgMusic);
+        document.removeEventListener('keydown', resumeBgMusic);
+    }
+    document.addEventListener('click', resumeBgMusic);
+    document.addEventListener('keydown', resumeBgMusic);
+    sounds.bgMusic.play().catch(() => { });
+
+    // --- SPRITE HOVER ---
+    if (player) player.addEventListener('mouseenter', () => { playSound(sounds.playerHover); wiggleSprite(player); });
+    if (opponent) opponent.addEventListener('mouseenter', () => { playSound(sounds.opponentHover); wiggleSprite(opponent); });
+
+    // --- GAME FLOW FUNCTIONS ---
     function showIntro() {
         promptText.textContent = 'A wild DERPY TIGER appeared!';
         buttons.innerHTML = `<button class="action-btn" id="meetBtn">Meet DERPY TIGER</button>`;
 
-        // reveal both stats shortly (so they pop in together with the sprites)
         setTimeout(() => {
             const trans = 'opacity .28s ease, transform .36s cubic-bezier(.22,1,.36,1)';
             opponentStats.style.transition = trans;
@@ -45,158 +104,167 @@ document.addEventListener('DOMContentLoaded', () => {
             playerStats.style.opacity = '1';
             playerStats.style.transform = 'translateY(0) scale(1)';
             playerStats.setAttribute('aria-hidden', 'false');
-        }, 700); // tweak this delay if you want them to appear earlier/later
+        }, 700);
     }
 
 
-    // Show option buttons and reveal player stats
     function showOptions() {
         promptText.textContent = 'What will HUNTRIX do?';
         buttons.innerHTML = `
-      <button class="action-btn" id="rapBtn">RAP BATTLE</button>
-      <button class="action-btn" id="hugBtn">HUG</button>
-      <button class="action-btn" id="singBtn">SLAY</button>
-      <button class="action-btn" id="danceBtn">DANCE</button>
-    `;
-
-
+            <button class="action-btn" id="rapBtn">RAP BATTLE</button>
+            <button class="action-btn" id="hugBtn">HUG</button>
+            <button class="action-btn" id="singBtn">SLAY</button>
+            <button class="action-btn" id="danceBtn">DANCE</button>
+        `;
     }
 
+    const actionTexts = {
+        hugBtn: 'HUNTRIX hugs DERPY TIGER. Derpy is very happy and starts purring.',
+        rapBtn: 'Mirror mirror on my phone, who\'s the baddest? YOU, hello! 💖🎤',
+        singBtn: 'HUNTRIX slays the real enemy: the flower pot that won\'t stay upright!',
+        danceBtn: 'Better sit down for the show \'cause HUNTRIX starts break dancing!'
+    };
 
-    // Hearts explosion around opponent
+    // --- EVENT DELEGATION FOR DYNAMIC BUTTONS ---
+    let hoverAudio = null;
+
+    buttons.addEventListener('mouseover', e => {
+        const id = e.target.id;
+        if (!id) return;
+
+        if (sounds.hoverSounds[id]) {
+            hoverAudio = sounds.hoverSounds[id];
+            hoverAudio.loop = true;
+            hoverAudio.currentTime = 0;
+            hoverAudio.play().catch(() => { });
+        }
+    });
+
+    buttons.addEventListener('mouseout', e => {
+        if (hoverAudio) {
+            hoverAudio.pause();
+            hoverAudio.currentTime = 0;
+            hoverAudio = null;
+        }
+    });
+
+    buttons.addEventListener('click', e => {
+        const id = e.target.id;
+        if (!id) return;
+
+        if (['hugBtn', 'rapBtn', 'singBtn', 'danceBtn'].includes(id)) {
+            promptText.textContent = actionTexts[id];
+            wiggleSprite(player);
+            wiggleSprite(opponent);
+            spawnHearts(30);
+            setTimeout(showCardPopup, 900);
+            playSound(sounds.actionClick);
+        }
+
+        if (id === 'meetBtn') showOptions();
+    });
+
+    // --- HEARTS ---
     function spawnHearts(count = 30) {
+        if (!opponent) return;
         const rect = opponent.getBoundingClientRect();
         for (let i = 0; i < count; i++) {
             const h = document.createElement('div');
             h.className = 'heart';
             h.textContent = '💖';
-            // randomize start near opponent area
             const offsetX = (Math.random() * rect.width) - (rect.width * 0.2);
             const startX = rect.left + rect.width / 2 + offsetX;
             const startY = rect.top + (Math.random() * rect.height * 0.6);
             h.style.left = `${startX}px`;
             h.style.top = `${startY}px`;
-
-            // random scale and animation delay
             const scale = 0.8 + Math.random() * 0.8;
             h.style.transform = `scale(${scale})`;
             h.style.animationDelay = `${Math.random() * 300}ms`;
             heartsContainer.appendChild(h);
 
-            // remove after animation ends
-            setTimeout(() => {
-                h.remove();
-            }, 1400 + (Math.random() * 400));
+            playSound(sounds.heart);
+            setTimeout(() => h.remove(), 1400 + Math.random() * 400);
         }
     }
 
-    // Show card popup (text above image). This uses the existing DOM node cardPopup.
+    // --- CARD POPUPS ---
     function showCardPopup() {
-        cardPopup.classList.remove("card-popup-hidden");
-        cardPopup.classList.add("showing");
-        cardPopup.setAttribute("aria-hidden", "false");
-
-        // animate/show the content quickly
-        setTimeout(() => {
-            cardPopupContent.classList.add("visible");
-        }, 60);
+        cardPopup.classList.remove('card-popup-hidden');
+        cardPopup.classList.add('showing');
+        cardPopup.setAttribute('aria-hidden', 'false');
+        playSound(sounds.cardUp);
+        setTimeout(() => cardPopupContent.classList.add('visible'), 60);
     }
 
-    // Close button
-    document.getElementById('closeDerpyCardBtn').addEventListener('click', () => {
-        const popup = document.getElementById('cardPopup');
-        const img = document.getElementById('cardPopupImage');
-        const content = document.getElementById('cardPopupContent');
-
-        const slideDuration = 1000; // ms
-        const fadeDuration = 1000;  // ms
-
-        // Trigger animations
-        img.style.animation = `card-slide-down ${slideDuration}ms cubic-bezier(.22, 1, .36, 1) forwards`;
-        content.style.animation = `fade-out ${fadeDuration}ms forwards`;
-
-        // Hide popup after slideDuration
-        setTimeout(() => {
-            popup.classList.add('card-popup-hidden');
-            popup.setAttribute('aria-hidden', 'true');
-
-            // reset styles for next open
-            img.style.animation = '';
-            content.style.animation = '';
-        }, slideDuration);
-    });
-
-
-
-
-
-    // Hide card popup
     function hideCardPopup() {
-        cardPopupContent.classList.remove("visible");
-        cardPopup.classList.remove("showing");
-        cardPopup.classList.add("card-popup-hidden");
-        cardPopup.setAttribute("aria-hidden", "true");
+        cardPopupContent.classList.remove('visible');
+        cardPopup.classList.remove('showing');
+        cardPopup.classList.add('card-popup-hidden');
+        cardPopup.setAttribute('aria-hidden', 'true');
     }
 
     function showBirthdayCard() {
-        const popup = document.getElementById('birthdayCardPopup');
         const text = document.getElementById('birthdayCardText');
         const image = document.getElementById('birthdayCardImage');
-
-        image.src = 'assets/Hello_Friend_Birthday_Card_Resized.png';
-
+        image.src = 'assets/images/Hello_Friend_Birthday_Card_Resized.png';
         text.innerHTML = `
-    <strong>💌Happy Birthday Clara!!💌</strong><br><br>
-      My beautiful, brilliant, b-girling bestie - like Rumi/Zoey/Mira, you slay! <br>
-      Derpy and I wish you a day filled with sugar, spice, and everything yay 🥳 <br>
-      Delivered via messenger tiger, your favourite grass-type 老虎 🐯, <br>
-      Enjoy this custom kpop demon hunters x pokemon app I made just for you! <br><br>
-      So much love, Amy xx 💖🎂
-  `;
-
-        const poemHTML = `
-      <strong>DERPY tiger opens his mouth, revealing a special birthday card for you! 💌</strong><br><br>
-      💖🎂
-    `;
-        // put poem in the left white area
-        document.getElementById('promptText').innerHTML = poemHTML;
-
-        popup.classList.remove('birthday-card-hidden');
-        popup.setAttribute('aria-hidden', 'false');
+            <strong>💌Happy Birthday Clara!!💌</strong><br><br>
+            My beautiful, brilliant, b-girling bestie - like Rumi/Zoey/Mira, you slay! <br>
+            Derpy and I wish you a day filled with sugar, spice, and everything yay! 🥳 <br>
+            Delivered via messenger tiger, your favourite grass-type 老虎 🐯, <br>
+            Enjoy this custom kpop demon hunters x pokemon app I made just for you! <br><br>
+            So much love, Amy xx 💖🎂
+        `;
+        promptText.innerHTML = `<strong>DERPY TIGER opens his mouth, revealing a special birthday card for YOU! 💌</strong><br><br>💖🎂🐯`;
+        birthdayCardPopup.classList.remove('birthday-card-hidden');
+        birthdayCardPopup.setAttribute('aria-hidden', 'false');
+        playSound(sounds.birthdayCard);
     }
 
-    // Close button
-    document.getElementById('closeBirthdayCardBtn').addEventListener('click', () => {
-        const popup = document.getElementById('birthdayCardPopup');
-        popup.classList.add('birthday-card-hidden');
-        popup.setAttribute('aria-hidden', 'true');
+    if (closeDerpyCardBtn) closeDerpyCardBtn.addEventListener('click', () => {
+        const slideDuration = 1000;
+        const fadeDuration = 1000;
+        cardPopupImage.style.animation = `card-slide-down ${slideDuration}ms cubic-bezier(.22,1,.36,1) forwards`;
+        cardPopupContent.style.animation = `fade-out ${fadeDuration}ms forwards`;
+        playSound(sounds.cardDown);
+        setTimeout(hideCardPopup, slideDuration);
     });
 
+    if (closeBirthdayCardBtn) closeBirthdayCardBtn.addEventListener('click', () => {
+        birthdayCardPopup.classList.add('birthday-card-hidden');
+        birthdayCardPopup.setAttribute('aria-hidden', 'true');
+    });
 
+    if (openCardBtn) openCardBtn.addEventListener('click', () => {
+        hideCardPopup();
+        showBirthdayCard();
+        playSound(sounds.actionClick);
+    });
 
-    // Final poem shown in bottom panel after open
-    function showFinalPoem() {
-        const poemHTML = `
-      <strong>💌 Happy Birthday!! 💌</strong><br><br>
-      To my absolutely insanely wonderful bestie and roommate, —<br>
-      Wish you a day full of magic and sweet memories!.<br>
-      Hope you enjoy this kpop demon hunters x pokemon app I made for you. <br>
-      I think Derpy tiger would be a grass-type pokemon, your fav 老虎🐯 ^-^. <br>
-      So much love, Amy xx 💖🎂
-    `;
-        // put poem in the left white area
-        document.getElementById('promptText').innerHTML = poemHTML;
-        // clear buttons
-        document.getElementById('buttons').innerHTML = '';
+    if (openCardBtn) openCardBtn.addEventListener('mouseenter', () => {
+        playSound(sounds.hoverSounds.openCardPopupBtn);
+    });
+
+    if (returnToJinuBtn) {
+        returnToJinuBtn.addEventListener('click', () => {
+            playSound(sounds.returnToJinu);
+            hideCardPopup();
+            if (birthdayCardPopup) {
+                birthdayCardPopup.classList.add('birthday-card-hidden');
+                birthdayCardPopup.setAttribute('aria-hidden', 'true');
+            }
+            showOptions();
+        });
+        returnToJinuBtn.addEventListener('mouseenter', () => {
+            playSound(sounds.hoverSounds.backToOptionsBtn);
+        });
     }
 
+    // --- WIGGLE SPRITE ---
     function wiggleSprite(el, duration = 800) {
         if (!el) return;
-
         let start = null;
-        const keyframes = [0, 5, -5, 5, 0]; // degrees
-
-        // get current translate from computed style
+        const keyframes = [0, 5, -5, 5, 0];
         const style = window.getComputedStyle(el);
         const matrix = new DOMMatrixReadOnly(style.transform);
         const translateX = matrix.m41;
@@ -205,75 +273,15 @@ document.addEventListener('DOMContentLoaded', () => {
         function step(timestamp) {
             if (!start) start = timestamp;
             const elapsed = timestamp - start;
-            const progress = elapsed / duration;
-            const frame = Math.floor(progress * (keyframes.length - 1));
+            const frame = Math.floor(elapsed / duration * (keyframes.length - 1));
             const angle = keyframes[frame] || 0;
-            el.style.transform = `translate(${translateX}px, ${translateY}px) rotate(${angle}deg)`;
-            if (elapsed < duration) {
-                requestAnimationFrame(step);
-            } else {
-                // reset to original transform after wiggle
-                el.style.transform = `translate(${translateX}px, ${translateY}px)`;
-            }
+            el.style.transform = `translate(${translateX}px,${translateY}px) rotate(${angle}deg)`;
+            if (elapsed < duration) requestAnimationFrame(step);
+            else el.style.transform = `translate(${translateX}px,${translateY}px)`;
         }
-
         requestAnimationFrame(step);
     }
 
-
-    // Event delegation for clicks
-    document.addEventListener('click', (e) => {
-        const id = e.target && e.target.id;
-
-        if (id === 'meetBtn') {
-            showOptions();
-            return;
-        }
-
-        // Map action buttons to their messages
-        const actionTexts = {
-            hugBtn: 'HUNTRIX hugs DERPY TIGER. Derpy is very happy and starts purring.',
-            rapBtn: 'Mirror mirror on my phone, who\'s the baddest? YOU, hello! 💖🎤',
-            singBtn: 'HUNTRIX slays the real enemy: the flower pot that won\'t stay upright!',
-            danceBtn: 'Better sit down for the show \'cause HUNTRIX starts break dancing!'
-        };
-
-        // Handle action buttons
-        if (['hugBtn', 'rapBtn', 'singBtn', 'danceBtn'].includes(id)) {
-            // Set prompt text
-            promptText.textContent = actionTexts[id];
-
-            // Spawn hearts
-            spawnHearts(30);
-
-            const playerWrap = document.getElementById('playerWrapper');
-            const opponentWrap = document.getElementById('opponentWrapper');
-
-            wiggleSprite(document.getElementById('player'));
-            wiggleSprite(document.getElementById('opponent'));
-
-
-            // Show card popup after delay
-            setTimeout(() => {
-                showCardPopup();
-            }, 900);
-
-            return;
-        }
-
-        if (id === 'openCardPopupBtn') {
-            hideCardPopup();
-            showBirthdayCard();
-            return;
-        }
-
-        if (id === 'backToOptionsBtn') {
-            showOptions();
-            return;
-        }
-    });
-
-    // initialize
+    // --- INITIALIZE ---
     showIntro();
-
-}); // DOMContentLoaded
+});
