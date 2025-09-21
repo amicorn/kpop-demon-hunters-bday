@@ -146,11 +146,11 @@ document.addEventListener('DOMContentLoaded', () => {
         image.src = 'assets/Hello_Friend_Birthday_Card_Resized.png';
 
         text.innerHTML = `
-    <strong>💌Happy Birthday Clara!!💌</strong><br>
-      To my absolutely insanely wonderful bestie and roommate,
-      Wish you a day full of magic and sweet memories!
-      Hope you enjoy this custom kpop demon hunters x pokemon app I made for you.
-      I think Derpy tiger would be a grass-type pokemon, your fav🐯⻁ ^-^. <br>
+    <strong>💌Happy Birthday Clara!!💌</strong><br><br>
+      My beautiful, brilliant, b-girling bestie - like Rumi/Zoey/Mira, you slay! <br>
+      Derpy and I wish you a day filled with sugar, spice, and everything yay 🥳 <br>
+      Delivered via messenger tiger, your favourite grass-type 老虎 🐯, <br>
+      Enjoy this custom kpop demon hunters x pokemon app I made just for you! <br><br>
       So much love, Amy xx 💖🎂
   `;
 
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
       To my absolutely insanely wonderful bestie and roommate, —<br>
       Wish you a day full of magic and sweet memories!.<br>
       Hope you enjoy this kpop demon hunters x pokemon app I made for you. <br>
-      I think Derpy tiger would be a grass-type pokemon 🐯⻁ ^-^. <br>
+      I think Derpy tiger would be a grass-type pokemon, your fav 老虎🐯 ^-^. <br>
       So much love, Amy xx 💖🎂
     `;
         // put poem in the left white area
