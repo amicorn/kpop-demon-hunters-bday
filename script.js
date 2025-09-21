@@ -102,29 +102,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 60);
     }
 
-       // Close button
-document.getElementById('closeDerpyCardBtn').addEventListener('click', () => {
-    const popup = document.getElementById('cardPopup');
-    const img = document.getElementById('cardPopupImage');
-    const content = document.getElementById('cardPopupContent');
+    // Close button
+    document.getElementById('closeDerpyCardBtn').addEventListener('click', () => {
+        const popup = document.getElementById('cardPopup');
+        const img = document.getElementById('cardPopupImage');
+        const content = document.getElementById('cardPopupContent');
 
-    const slideDuration = 1000; // ms
-    const fadeDuration = 1000;  // ms
+        const slideDuration = 1000; // ms
+        const fadeDuration = 1000;  // ms
 
-    // Trigger animations
-    img.style.animation = `card-slide-down ${slideDuration}ms cubic-bezier(.22, 1, .36, 1) forwards`;
-    content.style.animation = `fade-out ${fadeDuration}ms forwards`;
+        // Trigger animations
+        img.style.animation = `card-slide-down ${slideDuration}ms cubic-bezier(.22, 1, .36, 1) forwards`;
+        content.style.animation = `fade-out ${fadeDuration}ms forwards`;
 
-    // Hide popup after slideDuration
-    setTimeout(() => {
-        popup.classList.add('card-popup-hidden');
-        popup.setAttribute('aria-hidden', 'true');
+        // Hide popup after slideDuration
+        setTimeout(() => {
+            popup.classList.add('card-popup-hidden');
+            popup.setAttribute('aria-hidden', 'true');
 
-        // reset styles for next open
-        img.style.animation = '';
-        content.style.animation = '';
-    }, slideDuration);
-});
+            // reset styles for next open
+            img.style.animation = '';
+            content.style.animation = '';
+        }, slideDuration);
+    });
 
 
 
@@ -190,6 +190,37 @@ document.getElementById('closeDerpyCardBtn').addEventListener('click', () => {
         document.getElementById('buttons').innerHTML = '';
     }
 
+    function wiggleSprite(el, duration = 800) {
+        if (!el) return;
+
+        let start = null;
+        const keyframes = [0, 5, -5, 5, 0]; // degrees
+
+        // get current translate from computed style
+        const style = window.getComputedStyle(el);
+        const matrix = new DOMMatrixReadOnly(style.transform);
+        const translateX = matrix.m41;
+        const translateY = matrix.m42;
+
+        function step(timestamp) {
+            if (!start) start = timestamp;
+            const elapsed = timestamp - start;
+            const progress = elapsed / duration;
+            const frame = Math.floor(progress * (keyframes.length - 1));
+            const angle = keyframes[frame] || 0;
+            el.style.transform = `translate(${translateX}px, ${translateY}px) rotate(${angle}deg)`;
+            if (elapsed < duration) {
+                requestAnimationFrame(step);
+            } else {
+                // reset to original transform after wiggle
+                el.style.transform = `translate(${translateX}px, ${translateY}px)`;
+            }
+        }
+
+        requestAnimationFrame(step);
+    }
+
+
     // Event delegation for clicks
     document.addEventListener('click', (e) => {
         const id = e.target && e.target.id;
@@ -199,12 +230,30 @@ document.getElementById('closeDerpyCardBtn').addEventListener('click', () => {
             return;
         }
 
-        if (id === 'hugBtn') {
-            // immediate hug feedback
-            promptText.textContent = 'HUNTRIX hugs DERPY TIGER. Derpy is very happy and starts purring.';
+        // Map action buttons to their messages
+        const actionTexts = {
+            hugBtn: 'HUNTRIX hugs DERPY TIGER. Derpy is very happy and starts purring.',
+            rapBtn: 'Mirror mirror on my phone, who\'s the baddest? YOU, hello! 💖🎤',
+            singBtn: 'HUNTRIX slays the real enemy: the flower pot that won\'t stay upright!',
+            danceBtn: 'Better sit down for the show \'cause HUNTRIX starts break dancing!'
+        };
+
+        // Handle action buttons
+        if (['hugBtn', 'rapBtn', 'singBtn', 'danceBtn'].includes(id)) {
+            // Set prompt text
+            promptText.textContent = actionTexts[id];
+
+            // Spawn hearts
             spawnHearts(30);
 
-            // after short delay show card popup
+            const playerWrap = document.getElementById('playerWrapper');
+            const opponentWrap = document.getElementById('opponentWrapper');
+
+            wiggleSprite(document.getElementById('player'));
+            wiggleSprite(document.getElementById('opponent'));
+
+
+            // Show card popup after delay
             setTimeout(() => {
                 showCardPopup();
             }, 900);
@@ -213,50 +262,9 @@ document.getElementById('closeDerpyCardBtn').addEventListener('click', () => {
         }
 
         if (id === 'openCardPopupBtn') {
-            // Hide popup, then show poem in bottom panel
             hideCardPopup();
-            showBirthdayCard(); // show the final birthday card popup
+            showBirthdayCard();
             return;
-        }
-
-        // Example placeholders (not fleshed out)
-        if (id === 'rapBtn') {
-            promptText.textContent = 'Mirror mirror on my phone, who\'s the baddest? YOU, hello! 💖🎤';
-            spawnHearts(30);
-
-            // after short delay show card popup
-            setTimeout(() => {
-                showCardPopup();
-            }, 900);
-
-            return;
-            //   buttons.innerHTML = `<button class="action-btn" id="backToOptionsBtn">Continue</button>`;
-        }
-
-        if (id === 'singBtn') {
-            promptText.textContent = 'HUNTRIX slays the real enemy: the flower pot that won\'t stay upright!';
-            spawnHearts(30);
-
-            // after short delay show card popup
-            setTimeout(() => {
-                showCardPopup();
-            }, 900);
-
-            return;
-            //   buttons.innerHTML = `<button class="action-btn" id="backToOptionsBtn">Continue</button>`;
-        }
-
-        if (id === 'danceBtn') {
-            promptText.textContent = 'Better sit down for the show \'cause HUNTRIX starts break dancing!';
-            spawnHearts(30);
-
-            // after short delay show card popup
-            setTimeout(() => {
-                showCardPopup();
-            }, 900);
-
-            return;
-            //   buttons.innerHTML = `<button class="action-btn" id="backToOptionsBtn">Continue</button>`;
         }
 
         if (id === 'backToOptionsBtn') {

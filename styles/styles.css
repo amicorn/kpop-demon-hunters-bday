@@ -639,3 +639,18 @@ body {
         width: 92vw;
     }
 }
+
+/* Wiggle animation - additive on top of current transform */
+@keyframes wiggle {
+  0%   { transform: rotate(0deg); }
+  25%  { transform: rotate(5deg); }
+  50%  { transform: rotate(-5deg); }
+  75%  { transform: rotate(5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.sprite-wiggle {
+  animation: wiggle 0.8s ease-in-out;
+  animation-fill-mode: forwards; /* keeps the final rotation at 0deg */
+}
+
