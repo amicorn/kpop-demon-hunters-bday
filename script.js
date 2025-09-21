@@ -29,13 +29,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- SOUNDS ---
     const sounds = {
-        bgMusic: new Audio('assets/music/strawberry-mousse-cute-bgm.mp3'),
+        bgMusic: new Audio('assets/music/k-pop-pack.mp3'),
         heart: new Audio('assets/sfx/popping-bubbles.mp3'),
         cardUp: new Audio('assets/sfx/cute-cat.mp3'),
         cardDown: new Audio('assets/sfx/cat-meow-loud.mp3'),
         birthdayCard: new Audio('assets/music/sound-effect-twinklesparkle.mp3'),
         actionClick: new Audio('assets/sfx/sound-effect-twinklesparkle.mp3'),
-        returnToJinu: new Audio('assets/sfx/pokemon-cry-parody.mp3'),
+        returnToJinu: new Audio('assets/sfx/cute-cat.mp3.mp3'),
         playerHover: new Audio('assets/sfx/sound-effect-twinklesparkle.mp3'),
         opponentHover: new Audio('assets/sfx/cute-cat.mp3'),
         hoverSounds: {

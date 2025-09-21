@@ -227,9 +227,15 @@ body {
     overflow: hidden;
 }
 
-.hp-fill {
+.hp-fill-saja {
     height: 100%;
-    background: linear-gradient(90deg, #ffd700, #ffec8b);
+    background: linear-gradient(90deg, #ff0095, #e9c1da);
+    border-radius: 999px;
+}
+
+.hp-fill-huntrix {
+    height: 100%;
+    background: linear-gradient(90deg, #ffc400, #f9e583);
     border-radius: 999px;
 }
 
