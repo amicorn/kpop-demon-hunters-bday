@@ -119,11 +119,12 @@ document.addEventListener('DOMContentLoaded', () => {
         image.src = 'assets/Hello_Friend_Birthday_Card_Resized.png';
 
         text.innerHTML = `
-    <strong>💌 Happy Birthday!! 💌</strong><br><br>
-    To my amazing roommate and best friend —<br>
-    May your day be full of music, laughter, and tiny wild adventures.<br>
-    You light up late-night ramen runs, shared playlists, and messy chore days.<br>
-    Thank you for being brilliant, kind, and wonderfully you. 💖🎂
+    <strong>💌 Happy Birthday dear Clara!! 💌</strong><br>
+      To my absolutely insanely wonderful bestie and roommate, —<br>
+      Wish you a day full of magic and sweet memories!.<br>
+      Hope you enjoy this kpop demon hunters x pokemon app I made for you. <br>
+      I think Derpy tiger would be a grass-type pokemon, your fav🐯⻁ ^-^. <br>
+      So much love, Amy xx 💖🎂
   `;
 
         const poemHTML = `
@@ -150,10 +151,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function showFinalPoem() {
         const poemHTML = `
       <strong>💌 Happy Birthday!! 💌</strong><br><br>
-      To my amazing roommate and best friend —<br>
-      May your day be full of music, laughter, and tiny wild adventures.<br>
-      You light up late-night ramen runs, shared playlists, and messy chore days.<br>
-      Thank you for being brilliant, kind, and wonderfully you. 💖🎂
+      To my absolutely insanely wonderful bestie and roommate, —<br>
+      Wish you a day full of magic and sweet memories!.<br>
+      Hope you enjoy this kpop demon hunters x pokemon app I made for you. <br>
+      I think Derpy tiger would be a grass-type pokemon 🐯⻁ ^-^. <br>
+      So much love, Amy xx 💖🎂
     `;
         // put poem in the left white area
         document.getElementById('promptText').innerHTML = poemHTML;
