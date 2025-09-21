@@ -203,23 +203,59 @@ document.addEventListener('DOMContentLoaded', () => {
         cardPopup.setAttribute('aria-hidden', 'true');
     }
 
-    function showBirthdayCard() {
-        const text = document.getElementById('birthdayCardText');
-        const image = document.getElementById('birthdayCardImage');
-        image.src = 'assets/images/Hello_Friend_Birthday_Card_Resized.png';
-        text.innerHTML = `
-            <strong>💌Happy Birthday Clara!!💌</strong><br><br>
-            My beautiful, brilliant, b-girling bestie - like Rumi/Zoey/Mira, you slay! <br>
-            Derpy and I wish you a day filled with sugar, spice, and everything yay! 🥳 <br>
-            Delivered via messenger tiger, your favourite grass-type 老虎 🐯, <br>
-            Enjoy this custom kpop demon hunters x pokemon app I made just for you! <br><br>
-            So much love, Amy xx 💖🎂
-        `;
-        promptText.innerHTML = `<strong>DERPY TIGER opens his mouth, revealing a special birthday card for YOU! 💌</strong><br><br>💖🎂🐯`;
-        birthdayCardPopup.classList.remove('birthday-card-hidden');
-        birthdayCardPopup.setAttribute('aria-hidden', 'false');
-        playSound(sounds.birthdayCard);
-    }
+    // Function to show birthday card with slide-up animation
+function showBirthdayCard() {
+    const birthdayCardText = document.getElementById('birthdayCardText');
+    const birthdayCardImage = document.getElementById('birthdayCardImage');
+
+    // Set initial state
+    birthdayCardPopup.classList.remove('birthday-card-hidden');
+    birthdayCardPopup.setAttribute('aria-hidden', 'false');
+    birthdayCardText.style.opacity = '0';
+    birthdayCardImage.style.opacity = '0';
+
+    // Trigger slide-up animation
+    const slideDuration = 1000;
+    birthdayCardImage.style.animation = `card-slide-up ${slideDuration}ms cubic-bezier(.22,1,.36,1) forwards`;
+    birthdayCardText.style.animation = `card-slide-up ${slideDuration}ms cubic-bezier(.22,1,.36,1) forwards`;
+
+    playSound(sounds.birthdayCard);
+
+    // Fade in text slightly after animation starts
+    setTimeout(() => {
+        birthdayCardText.style.opacity = '1';
+    }, 60);
+
+    // Set text and image content
+    birthdayCardImage.src = 'assets/images/Hello_Friend_Birthday_Card_Resized.png';
+    birthdayCardText.innerHTML = `
+        <strong>💌Happy Birthday Clara!!💌</strong><br><br>
+        My beautiful, brilliant, b-girling bestie - like Rumi/Zoey/Mira, you slay! <br>
+        Derpy and I wish you a day filled with sugar, spice, and everything yay! 🥳 <br>
+        Delivered via messenger tiger, your favourite grass-type 老虎 🐯, <br>
+        Enjoy this custom kpop demon hunters x pokemon app I made just for you! <br><br>
+        So much love, Amy xx 💖🎂
+    `;
+    promptText.innerHTML = `<strong>DERPY TIGER opens his mouth, revealing a special birthday card for YOU! 💌</strong><br><br>💖🎂🐯`;
+}
+
+// Close birthday card with slide-down animation
+if (closeBirthdayCardBtn) closeBirthdayCardBtn.addEventListener('click', () => {
+    const container = document.getElementById('birthdayCardContainer');
+    const slideDuration = 1000;
+
+    container.style.animation = `card-slide-down ${slideDuration}ms cubic-bezier(.22,1,.36,1) forwards`;
+    playSound(sounds.cardDown);
+
+    setTimeout(() => {
+        birthdayCardPopup.classList.add('birthday-card-hidden');
+        birthdayCardPopup.setAttribute('aria-hidden', 'true');
+
+        // Reset animation for next open
+        container.style.animation = '';
+    }, slideDuration);
+});
+
 if (closeDerpyCardBtn) closeDerpyCardBtn.addEventListener('click', () => {
     const slideDuration = 1000;
     const fadeDuration = 1000;
@@ -241,12 +277,6 @@ if (closeDerpyCardBtn) closeDerpyCardBtn.addEventListener('click', () => {
     }, totalDuration);
 });
 
-
-
-    if (closeBirthdayCardBtn) closeBirthdayCardBtn.addEventListener('click', () => {
-        birthdayCardPopup.classList.add('birthday-card-hidden');
-        birthdayCardPopup.setAttribute('aria-hidden', 'true');
-    });
 
     if (openCardBtn) openCardBtn.addEventListener('click', () => {
         hideCardPopup();

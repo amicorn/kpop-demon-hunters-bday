@@ -501,9 +501,8 @@ body {
 
 .birthday-card-text {
     position: absolute;
-    top: 67%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 38%;
+    left: 6%;
     width: 90%;
     text-align: center;
     color: #ff00d4;
