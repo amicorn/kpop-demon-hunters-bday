@@ -1,7 +1,7 @@
-# kpop-demon-hunters-bday
+# KPop Demon Hunters x Pokémon Dance Battle
 
 ## Overview
-Pokemon battle x kpop demon hunters as birthday gift for my wonderful friend :)
+Made this Pokémon battle x Kpop Demon Hunters game as a birthday gift for my wonderful friend :)
 
 ## Screenshots
 <img src="screenshots/kdh pokemon battle start screen.png" width="1000"> 
